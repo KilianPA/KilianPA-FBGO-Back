@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +14,27 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::post('/login', 'UserController@login');
 
-Route::post('/register', 'UserController@store');
+Route::prefix('user')->group(function () {
+    Route::post('/', 'UserController@store');
+//    Route::middleware('auth:api')->get('/user', function (Request $request) {
+//        return $request->user();
+//    });
+});
+
+Route::group(['prefix' => 'game',  'middleware' => 'auth:api'], function () {
+    Route::post('/', 'GameController@store');
+    Route::put('/{id}', 'GameController@update');
+    Route::get('/{id}', 'GameController@show');
+    Route::delete('/{id}', 'GameController@destroy');
+});
+
+Route::group(['prefix' => 'enigma',  'middleware' => 'auth:api'], function () {
+    Route::post('/', 'EnigmaController@store');
+    Route::put('/{id}', 'EnigmaController@update');
+    Route::get('/{id}', 'EnigmaController@show');
+    Route::delete('/{id}', 'EnigmaController@destroy');
+});
+
+
