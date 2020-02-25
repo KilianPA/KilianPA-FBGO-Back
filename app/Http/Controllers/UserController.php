@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\User;
+use App\Transformer\UserTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -47,11 +48,17 @@ class UserController extends Controller
         }
     }
 
+
+    public function get($id) {
+        $user = $this->user::find($id);
+        return (new UserTransformer)->transform($user);
+    }
+
     public function store(Request $request){
 
 
         $rules = [
-            'email' => 'required',
+            'email' => 'required|unique:users',
             'password'  => 'required'
         ];
         $request->validate($rules);

@@ -7,14 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Enigma extends Model
 {
 
+    protected $table = 'enigma';
+
     protected $fillable = [
-        'answer', 'question'
+        'answer', 'question', 'hint'
     ];
 
 
     public function games()
     {
-        return $this->belongsToMany(Enigma::class, 'games_enigmas', 'enigma_id', 'game_id');
+        return $this->belongsToMany(Game::class, 'game_enigma');
 
     }
 }

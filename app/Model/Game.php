@@ -11,13 +11,15 @@ class Game extends Model
      *
      * @var array
      */
+
+    protected $table = 'game';
+
     protected $fillable = [
-        'status', 'started_at', 'lat', 'long', 'owner_id'
+        'lat', 'long', 'name'
     ];
 
     public function enigmas()
     {
-        return $this->belongsToMany(Enigma::class, 'games_enigmas', 'game_id', 'enigma_id');
-
+        return $this->belongsToMany(Enigma::class, 'game_enigma');
     }
 }

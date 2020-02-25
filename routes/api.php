@@ -16,25 +16,34 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', 'UserController@login');
 
-Route::prefix('user')->group(function () {
+Route::group(['prefix' => 'users'], function () {
     Route::post('/', 'UserController@store');
+    Route::get('/{id}','UserController@get');
 //    Route::middleware('auth:api')->get('/user', function (Request $request) {
 //        return $request->user();
 //    });
 });
 
-Route::group(['prefix' => 'game',  'middleware' => 'auth:api'], function () {
+Route::group(['prefix' => 'games', 'middleware' => 'auth:api'], function () {
     Route::post('/', 'GameController@store');
     Route::put('/{id}', 'GameController@update');
-    Route::get('/{id}', 'GameController@show');
+    Route::get('/{id}', 'GameController@get');
     Route::delete('/{id}', 'GameController@destroy');
 });
 
-Route::group(['prefix' => 'enigma',  'middleware' => 'auth:api'], function () {
+Route::group(['prefix' => 'enigmas', 'middleware' => 'auth:api'], function () {
     Route::post('/', 'EnigmaController@store');
     Route::put('/{id}', 'EnigmaController@update');
     Route::get('/{id}', 'EnigmaController@show');
     Route::delete('/{id}', 'EnigmaController@destroy');
+});
+
+Route::group(['prefix' => 'user-games', 'middleware' => 'auth:api'], function () {
+    Route::post('/', 'UserGameController@store');
+    Route::put('/{id}', 'UserGameController@update');
+    Route::get('/{id}', 'UserGameController@show');
+    Route::delete('/{id}', 'UserGameController@destroy');
+    Route::get('/{id}', 'UserGameController@get');
 });
 
 

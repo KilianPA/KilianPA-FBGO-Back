@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Game;
-use App\Services\GameService;
-use App\Transformer\GameTransformer;
+use App\Model\UserGame;
+use App\Services\UserGameService;
+use App\Transformer\UserGameTransformer;
 use Illuminate\Http\Request;
 
-class GameController extends Controller
+class UserGameController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    protected $game;
-    protected $gameService;
 
-    public function __construct(Game $game)
+    protected $userGame;
+    protected $userGameService;
+
+    public function __construct(UserGame $userGame)
     {
-        $this->game = $game;
-        $this->gameService = new GameService();
+        $this->userGame = $userGame;
+        $this->userGameService = new UserGameService();
     }
 
     public function index()
@@ -46,54 +47,55 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
-        $game = $this->game->create($request->all());
-        $this->gameService->attachEnigmaToGame($game);
+        $data = $request->all();
+        $data['user_id'] = (auth()->id());
+        $gameUser = $this->userGame->create($data);
+        $this->userGameService->initEnigma($gameUser->id, $data);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\ModelGame  $modelGame
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function get($id)
     {
-        $game = $this->game::find($id);
-        return (new GameTransformer())->transform($game);
-    }
-
-    public function attachEnigma (Game $game, $id) {
-        $game->enigmas()->attach($id);
+        $userGame = $this->userGame::find($id);
+        return (new UserGameTransformer())->transform($userGame);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\ModelGame  $modelGame
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($id, Request $request)
+    public function edit($id)
     {
-        $game = $this->game->find($id);
-        $game->update($request->all());
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ModelGame  $modelGame
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function update(Request $request, $id)
+    {
+        //
+    }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\ModelGame  $modelGame
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $this->game::destroy($id);
+        //
     }
 }
