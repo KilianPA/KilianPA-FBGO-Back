@@ -36,6 +36,7 @@ Route::group(['prefix' => 'enigmas', 'middleware' => 'auth:api'], function () {
     Route::put('/{id}', 'EnigmaController@update');
     Route::get('/{id}', 'EnigmaController@show');
     Route::delete('/{id}', 'EnigmaController@destroy');
+    Route::post('validate/{id}', 'EnigmaController@checkAnswer');
 });
 
 Route::group(['prefix' => 'user-games', 'middleware' => 'auth:api'], function () {

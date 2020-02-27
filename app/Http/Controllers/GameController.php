@@ -48,6 +48,9 @@ class GameController extends Controller
     {
         $game = $this->game->create($request->all());
         $this->gameService->attachEnigmaToGame($game);
+        return response()->json([
+            'game'  =>  (new GameTransformer())->transform($game)
+        ]);
     }
 
     /**

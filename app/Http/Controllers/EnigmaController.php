@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Enigma;
+use App\Services\EnigmaService;
 use Illuminate\Http\Request;
 
 class EnigmaController extends Controller
@@ -10,9 +11,13 @@ class EnigmaController extends Controller
 
 
     protected $enigma;
+
+    protected $enigmaService;
+
     public function __construct(Enigma $enigma)
     {
         $this->enigma = $enigma;
+        $this->enigmaService = new EnigmaService();
     }
 
     /**
@@ -34,7 +39,7 @@ class EnigmaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -45,7 +50,7 @@ class EnigmaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\ModelEnigma  $modelEnigma
+     * @param  \App\ModelEnigma $modelEnigma
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -56,7 +61,7 @@ class EnigmaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\ModelEnigma  $modelEnigma
+     * @param  \App\ModelEnigma $modelEnigma
      * @return \Illuminate\Http\Response
      */
     public function update($id, Request $request)
@@ -68,19 +73,31 @@ class EnigmaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ModelEnigma  $modelEnigma
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\ModelEnigma $modelEnigma
      * @return \Illuminate\Http\Response
      */
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\ModelEnigma  $modelEnigma
+     * @param  \App\ModelEnigma $modelEnigma
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         $this->enigma::destroy($id);
+    }
+
+    public function checkAnswer($id, Request $request)
+    {
+        $data = $request->all();
+        $isCorrect = $this->enigmaService->checkAnswer($id, $data['answer'], $this->enigma);
+        if ($isCorrect) {
+            $this->enigmaService->validEnigma($id, $data['user_game_id']);
+            return response()->json(['is_valid' => true, 'message' => 'Bonne réponse'])->setStatusCode(200);
+        } else {
+            return response()->json(['is_valid' => false, 'message' => 'Mauvaise réponse'])->setStatusCode(200);
+        }
     }
 }

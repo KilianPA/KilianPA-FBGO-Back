@@ -49,8 +49,11 @@ class UserGameController extends Controller
     {
         $data = $request->all();
         $data['user_id'] = (auth()->id());
-        $gameUser = $this->userGame->create($data);
-        $this->userGameService->initEnigma($gameUser->id, $data);
+        $userGame = $this->userGame->create($data);
+        $this->userGameService->initEnigma($userGame->id, $data);
+        return response()->json([
+            'user_game'  =>  (new UserGameTransformer())->transform($userGame)
+        ]);
     }
 
     /**

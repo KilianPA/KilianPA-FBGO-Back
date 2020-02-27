@@ -12,8 +12,6 @@ class GameTransformer extends TransformerAbstract
     public function transform(Game $model)
     {
         return [
-            'user' => $model->user,
-            'game' => $model->game,
             'enigmas' => $model->enigmas,
         ];
     }
