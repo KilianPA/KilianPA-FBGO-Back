@@ -29,7 +29,7 @@ class UserGameService
             $userGameEnigma = new UserGameEnigma();
             $userGameEnigma->user_game_id = $userGameId;
             $userGameEnigma->enigma_id = $enigma->id;
-            $pos = $this->generate_random_point(array($data['lat'], $data['long']), 1);
+            $pos = $this->generate_random_point(array($data['latitude'], $data['longitude']), 1);
             $userGameEnigma->lat = $pos[0];
             $userGameEnigma->long = $pos[1];
             $userGameEnigma->save();

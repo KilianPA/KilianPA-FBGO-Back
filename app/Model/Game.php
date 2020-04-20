@@ -15,7 +15,7 @@ class Game extends Model
     protected $table = 'game';
 
     protected $fillable = [
-        'lat', 'long', 'name'
+        'latitude', 'longitude', 'name'
     ];
 
     public function enigmas()
