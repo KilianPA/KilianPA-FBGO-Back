@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Model\Enigma;
+use App\Model\Game;
+use App\Services\GameService;
+use Faker\Provider\Color;
 use Illuminate\Console\Command;
 
 class importEnigma extends Command
@@ -49,6 +52,14 @@ class importEnigma extends Command
                 $enigma->save();
             }
             $count++;
+        }
+
+        $service = new GameService();
+        for ($i = 1; $i <= 50; $i++) {
+            $data = [];
+            $data['name']= Color::colorName();
+            $game = Game::create($data);
+            $service->attachEnigmaToGame($game);
         }
     }
 }

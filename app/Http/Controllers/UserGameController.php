@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Game;
 use App\Model\UserGame;
 use App\Services\UserGameService;
 use App\Transformer\UserGameTransformer;
@@ -42,24 +43,26 @@ class UserGameController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $data = $request->all();
         $data['user_id'] = (auth()->id());
+        $game = Game::all()->random(1)->first();
+        $data['game_id'] = $game->id;
         $userGame = $this->userGame->create($data);
-        $this->userGameService->initEnigma($userGame->id, $data);
+        $this->userGameService->initEnigma($game, $userGame, $data);
         return response()->json([
-            'user_game'  =>  (new UserGameTransformer())->transform($userGame)
+            'user_game' => (new UserGameTransformer())->transform($userGame)
         ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function get($id)
@@ -71,7 +74,7 @@ class UserGameController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -82,8 +85,8 @@ class UserGameController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -94,7 +97,7 @@ class UserGameController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

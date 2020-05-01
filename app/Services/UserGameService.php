@@ -21,18 +21,19 @@ class UserGameService
 
     }
 
-    public function initEnigma($userGameId, array $data)
+    public function initEnigma($game, $userGame ,array $data)
     {
-        $game = Game::find($data['game_id']);
+//        $game = Game::find($data['game_id']);
         $enigmas = ($game->enigmas);
         foreach ($enigmas as $enigma) {
             $userGameEnigma = new UserGameEnigma();
-            $userGameEnigma->user_game_id = $userGameId;
+            $userGameEnigma->user_game_id = $userGame->id;
             $userGameEnigma->enigma_id = $enigma->id;
             $pos = $this->generate_random_point(array($data['latitude'], $data['longitude']), 1);
             $userGameEnigma->lat = $pos[0];
             $userGameEnigma->long = $pos[1];
             $userGameEnigma->save();
+
         }
     }
 
